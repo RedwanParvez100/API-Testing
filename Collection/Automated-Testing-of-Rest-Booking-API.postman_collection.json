@@ -1,0 +1,772 @@
+{
+	"info": {
+		"_postman_id": "ab02dae0-7cc6-4dfb-a324-37586ff1c6e0",
+		"name": "Automated-Testing-of-Rest-Booking-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39597354",
+		"_collection_link": "https://www.postman.com/tester-2485/workspace/api-practice/collection/39597354-ab02dae0-7cc6-4dfb-a324-37586ff1c6e0?action=share&source=collection_link&creator=39597354"
+	},
+	"item": [
+		{
+			"name": "create_new_booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json()\r",
+							"console.log(jsonData)\r",
+							"pm.environment.set(\"id\",jsonData.bookingid)\r",
+							"\r",
+							"\r",
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var firstName = pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"console.log(firstName)\r",
+							"pm.environment.set(\"first_name\",firstName)\r",
+							"\r",
+							"var lastName = pm.variables.replaceIn(\"{{$randomLastName}}\")\r",
+							"pm.environment.set(\"last_name\",lastName)\r",
+							"\r",
+							"var totalPrice = pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"console.log(totalPrice)\r",
+							"pm.environment.set(\"total_price\",totalPrice)\r",
+							"\r",
+							"var depositPaid = pm.variables.replaceIn(\"{{$randomBoolean}}\")\r",
+							"console.log(depositPaid)\r",
+							"pm.environment.set(\"deposit_paid\",depositPaid)\r",
+							"\r",
+							"const in_date = require('moment')\r",
+							"const check_in_date = in_date()\r",
+							"// console.log(check_in_date)\r",
+							"pm.environment.set(\"check_in\", check_in_date.format(\"YYYY-MM-DD\"))\r",
+							"// console.log(check_in_date.format(\"YYYY-MM-DD\"))\r",
+							"\r",
+							"const out_date = require('moment')\r",
+							"const check_out_date = out_date()\r",
+							"// console.log(check_out_date)\r",
+							"pm.environment.set(\"check_out\", check_out_date.add(3,'d').format(\"YYYY-MM-DD\"))\r",
+							"\r",
+							"var additionalNeeds = pm.variables.replaceIn(\"{{$randomProduct}}\")\r",
+							"pm.environment.set(\"additional_needs\",additionalNeeds)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"firstname\" : \"{{first_name}}\",\r\n\t\"lastname\" : \"{{last_name}}\",\r\n\t\"totalprice\" : {{total_price}},\r\n\t\"depositpaid\" : {{deposit_paid}},\r\n\t\"bookingdates\" : {\r\n    \t\"checkin\" : \"{{check_in}}\",\r\n    \t\"checkout\" : \"{{check_out}}\"\r\n\t},\r\n\t\"additionalneeds\" : \"{{additional_needs}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/booking/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_booking_details_by_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    \r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"\r",
+							"var responsecode = pm.response.json()\r",
+							"console.log(responsecode)\r",
+							"\r",
+							"pm.test(\"Validating The First Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"first_name\")).to.eql(responsecode.firstname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Last Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"last_name\")).to.eql(responsecode.lastname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Total Price\", function(){\r",
+							"    pm.expect(pm.environment.get(\"total_price\")).to.eql(responsecode.totalprice.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Deposit Paid\", function(){\r",
+							"    pm.expect(pm.environment.get(\"deposit_paid\")).to.eql(responsecode.depositpaid.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckIn Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_in\")).to.eql(responsecode.bookingdates.checkin)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckOut Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_out\")).to.eql(responsecode.bookingdates.checkout)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Additional Needs\", function(){\r",
+							"    pm.expect(pm.environment.get(\"additional_needs\")).to.eql(responsecode.additionalneeds)\r",
+							"})\r",
+							"\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/booking/{{id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create_a_token_for_authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json()\r",
+							"console.log(jsonData)\r",
+							"pm.environment.set(\"token\",jsonData.token)\r",
+							"\r",
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"username\": \"admin\",\r\n\t\"password\": \"password123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/auth",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_the_booking_details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var firstName = pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"console.log(firstName)\r",
+							"pm.environment.set(\"first_name\",firstName)\r",
+							"\r",
+							"var lastName = pm.variables.replaceIn(\"{{$randomLastName}}\")\r",
+							"pm.environment.set(\"last_name\",lastName)\r",
+							"\r",
+							"var totalPrice = pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"console.log(totalPrice)\r",
+							"pm.environment.set(\"total_price\",totalPrice)\r",
+							"\r",
+							"var depositPaid = pm.variables.replaceIn(\"{{$randomBoolean}}\")\r",
+							"console.log(depositPaid)\r",
+							"pm.environment.set(\"deposit_paid\",depositPaid)\r",
+							"\r",
+							"const in_date = require('moment')\r",
+							"const check_in_date = in_date()\r",
+							"// console.log(check_in_date)\r",
+							"pm.environment.set(\"check_in\", check_in_date.format(\"YYYY-MM-DD\"))\r",
+							"// console.log(check_in_date.format(\"YYYY-MM-DD\"))\r",
+							"\r",
+							"const out_date = require('moment')\r",
+							"const check_out_date = out_date()\r",
+							"// console.log(check_out_date)\r",
+							"pm.environment.set(\"check_out\", check_out_date.add(3,'d').format(\"YYYY-MM-DD\"))\r",
+							"\r",
+							"var additionalNeeds = pm.variables.replaceIn(\"{{$randomProduct}}\")\r",
+							"pm.environment.set(\"additional_needs\",additionalNeeds)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"\r",
+							"var responsecode = pm.response.json()\r",
+							"console.log(responsecode)\r",
+							"\r",
+							"pm.test(\"Validating The First Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"first_name\")).to.eql(responsecode.firstname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Last Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"last_name\")).to.eql(responsecode.lastname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Total Price\", function(){\r",
+							"    pm.expect(pm.environment.get(\"total_price\")).to.eql(responsecode.totalprice.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Deposit Paid\", function(){\r",
+							"    pm.expect(pm.environment.get(\"deposit_paid\")).to.eql(responsecode.depositpaid.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckIn Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_in\")).to.eql(responsecode.bookingdates.checkin)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckOut Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_out\")).to.eql(responsecode.bookingdates.checkout)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Additional Needs\", function(){\r",
+							"    pm.expect(pm.environment.get(\"additional_needs\")).to.eql(responsecode.additionalneeds)\r",
+							"})\r",
+							"\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"firstname\" : \"{{first_name}}\",\r\n\t\"lastname\" : \"{{last_name}}\",\r\n\t\"totalprice\" : {{total_price}},\r\n\t\"depositpaid\" : {{deposit_paid}},\r\n\t\"bookingdates\" : {\r\n    \t\"checkin\" : \"{{check_in}}\",\r\n    \t\"checkout\" : \"{{check_out}}\"\r\n\t},\r\n\t\"additionalneeds\" : \"{{additional_needs}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/booking/{{id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check_after_the_update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"\r",
+							"var responsecode = pm.response.json()\r",
+							"console.log(responsecode)\r",
+							"\r",
+							"pm.test(\"Validating The First Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"first_name\")).to.eql(responsecode.firstname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Last Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"last_name\")).to.eql(responsecode.lastname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Total Price\", function(){\r",
+							"    pm.expect(pm.environment.get(\"total_price\")).to.eql(responsecode.totalprice.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Deposit Paid\", function(){\r",
+							"    pm.expect(pm.environment.get(\"deposit_paid\")).to.eql(responsecode.depositpaid.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckIn Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_in\")).to.eql(responsecode.bookingdates.checkin)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckOut Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_out\")).to.eql(responsecode.bookingdates.checkout)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Additional Needs\", function(){\r",
+							"    pm.expect(pm.environment.get(\"additional_needs\")).to.eql(responsecode.additionalneeds)\r",
+							"})\r",
+							"\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/booking/{{id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_booking_record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/booking/{{id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check_after_the_delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"console.log(status_code)\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    pm.test(\"OK: This status code indicates that the request was successful, and the server returned the requested data.\")\r",
+							"\r",
+							"var responsecode = pm.response.json()\r",
+							"console.log(responsecode)\r",
+							"\r",
+							"pm.test(\"Validating The First Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"first_name\")).to.eql(responsecode.firstname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Last Name\", function(){\r",
+							"    pm.expect(pm.environment.get(\"last_name\")).to.eql(responsecode.lastname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Total Price\", function(){\r",
+							"    pm.expect(pm.environment.get(\"total_price\")).to.eql(responsecode.totalprice.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Deposit Paid\", function(){\r",
+							"    pm.expect(pm.environment.get(\"deposit_paid\")).to.eql(responsecode.depositpaid.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckIn Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_in\")).to.eql(responsecode.bookingdates.checkin)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The CheckOut Date\", function(){\r",
+							"    pm.expect(pm.environment.get(\"check_out\")).to.eql(responsecode.bookingdates.checkout)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validating The Additional Needs\", function(){\r",
+							"    pm.expect(pm.environment.get(\"additional_needs\")).to.eql(responsecode.additionalneeds)\r",
+							"})\r",
+							"\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 201){\r",
+							"    pm.test(\"Created: This status code means that the request was successful, and the server created a new resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 400){\r",
+							"    pm.test(\"Bad Request: This status code indicates that the request was malformed or invalid.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 401){\r",
+							"    pm.test(\"Unauthorized: This status code lets the client know that it is not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 403){\r",
+							"    pm.test(\"Forbidden: This status code communicates that the client is authenticated but not authorized to access the requested resource.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"Not Found: This status code indicates that the requested resource was not found on the server.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 500){\r",
+							"    pm.test(\"Internal Server Error: This generic error code indicates the server encountered an unexpected condition that prevented it from fulfilling the request.\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 502){\r",
+							"    pm.test(\"Bad Gateway: This status code indicates that a server acting as a gateway or proxy received an invalid response from an upstream server\")\r",
+							"}\r",
+							"\r",
+							"else if(status_code == 503){\r",
+							"    pm.test(\"Service Unavailable: This status code is returned when the server is temporarily unable to handle the request. It’s often seen during periods of increased traffic or when the server is undergoing maintenance.\")\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong\")\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/booking/{{id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
