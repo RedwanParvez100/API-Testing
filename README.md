@@ -243,4 +243,4 @@ newman run Automated-Testing-of-Rest-Booking-API.postman_collection.json -e Auto
 ```
 
 ## Newman Report Summary:
-![Newman Report Summary](https://github.com/RedwanParvez100/API-Testing/Assets/Newman-report-P1.png)
+![Newman Report Summary](https://github.com/RedwanParvez100/API-Testing/blob/main/Assets/Newman-report-P1.png)
