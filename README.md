@@ -249,3 +249,4 @@ newman run Automated-Testing-of-Rest-Booking-API.postman_collection.json -e Auto
 ![Newman Report Summary](https://github.com/RedwanParvez100/API-Testing/blob/main/Assets/Newman-report-P3.png)
 ![Newman Report Summary](https://github.com/RedwanParvez100/API-Testing/blob/main/Assets/Newman-report-P4.png)
 
+
